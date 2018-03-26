@@ -1,17 +1,14 @@
 {
-  "name": "wechaty",
+  "name": "windmill",
   "version": "0.13.91",
   "description": "Wechat for Bot(Personal Account)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "wechaty": {
-    "DEFAULT_HEAD": 0,
+    "DEFAULT_HEAD": 1,
     "DEFAULT_PORT": 8080,
     "DEFAULT_PUPPET": "web",
-    "DEFAULT_PROFILE": "demo",
-    "DEFAULT_PROTOCOL": "io|0.0.1",
-    "DEFAULT_TOKEN": "WECHATY_IO_TOKEN",
-    "DEFAULT_APIHOST": "api.chatie.io"
+    "DEFAULT_PROFILE": "demo"
   },
   "scripts": {
     "ts-node": "ts-node",
@@ -39,14 +36,9 @@
     "demo": "ts-node main.ts",
     "start": "npm run demo"
   },
-  "git": {
-    "scripts": {
-      "pre-push": "./scripts/pre-push.sh"
-    }
-  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chatie/wechaty.git"
+    "url": "git+https://github.com/liuganghao/windmill.git"
   },
   "keywords": [
     "wechat",
@@ -63,9 +55,8 @@
     "微信控"
   ],
   "author": {
-    "name": "Huan LI",
-    "email": "zixia@zixia.net",
-    "url": "www.zixia.net"
+    "name": "liuganghao",
+    "email": "liuganghao@gmail.com"
   },
   "license": "Apache-2.0",
   "bugs": {
@@ -151,7 +142,6 @@
     "tuling123-client": "^0.0.1",
     "typescript": "^2.7.2"
   },
-  "files_comment__whitelist_npm_publish": "http://stackoverflow.com/a/8617868/1123955",
   "files": [
     "CHANGELOG",
     "LICENSE",

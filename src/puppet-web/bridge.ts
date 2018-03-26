@@ -17,8 +17,8 @@
  *
  */
 import { EventEmitter } from 'events'
-import * as fs          from 'fs'
-import * as path        from 'path'
+import * as fs from 'fs'
+import * as path from 'path'
 
 import {
   Browser,
@@ -27,37 +27,37 @@ import {
   ElementHandle,
   launch,
   Page,
-}                       from 'puppeteer'
-import StateSwitch      from 'state-switch'
-import { parseString }  from 'xml2js'
+} from 'puppeteer'
+import StateSwitch from 'state-switch'
+import { parseString } from 'xml2js'
 
 /* tslint:disable:no-var-requires */
-const retryPromise  = require('retry-promise').default
+const retryPromise = require('retry-promise').default
 
-import { log }        from '../config'
-import Profile        from '../profile'
-import Misc           from '../misc'
+import { log } from '../config'
+import Profile from '../profile'
+import Misc from '../misc'
 import {
   MediaData,
   MsgRawObj,
-}                     from './schema'
+} from './schema'
 
 export interface InjectResult {
-  code:    number,
+  code: number,
   message: string,
 }
 
 export interface BridgeOptions {
-  head?   : boolean,
-  profile : Profile,
+  head?: boolean,
+  profile: Profile,
 }
 
 declare const WechatyBro
 
 export class Bridge extends EventEmitter {
-  private browser : Browser
-  private page    : Page
-  private state   : StateSwitch
+  private browser: Browser
+  private page: Page
+  private state: StateSwitch
 
   constructor(
     public options: BridgeOptions,
@@ -108,7 +108,8 @@ export class Bridge extends EventEmitter {
     log.verbose('PuppetWebBridge', 'initBrowser()')
 
     const headless = this.options.head ? false : true
-    const browser = await launch({
+
+    let cli = {
       headless,
       args: [
         '--audio-output-channels=0',
@@ -122,7 +123,8 @@ export class Bridge extends EventEmitter {
         '--mute-audio',
         '--no-sandbox',
       ],
-    })
+    };
+    const browser = await launch(cli)
 
     const version = await browser.version()
     log.verbose('PUppetWebBridge', 'initBrowser() version: %s', version)
@@ -132,7 +134,7 @@ export class Bridge extends EventEmitter {
 
   public async onDialog(dialog: Dialog) {
     log.warn('PuppetWebBridge', 'init() page.on(dialog) type:%s message:%s',
-                                dialog.type, dialog.message())
+      dialog.type, dialog.message())
     try {
       // XXX: Which ONE is better?
       await dialog.accept()
@@ -177,14 +179,14 @@ export class Bridge extends EventEmitter {
 
     // set this in time because the following callbacks
     // might be called before initPage() return.
-    const page = this.page =  await browser.newPage()
+    const page = this.page = await browser.newPage()
 
-    page.on('error',  e => this.emit('error', e))
+    page.on('error', e => this.emit('error', e))
 
     page.on('dialog', this.onDialog.bind(this))
 
     const cookieList = this.options.profile.get('cookies') as Cookie[]
-    const url        = this.entryUrl(cookieList)
+    const url = this.entryUrl(cookieList)
 
     log.verbose('PuppetWebBridge', 'initPage() before page.goto(url)')
     await page.goto(url) // Does this related to(?) the CI Error: exception: Navigation Timeout Exceeded: 30000ms exceeded
@@ -228,14 +230,14 @@ export class Bridge extends EventEmitter {
 
     try {
       const sourceCode = fs.readFileSync(WECHATY_BRO_JS_FILE)
-                            .toString()
+        .toString()
 
       let retObj = await page.evaluate(sourceCode) as any as InjectResult
 
       if (retObj && /^(2|3)/.test(retObj.code.toString())) {
         // HTTP Code 2XX & 3XX
         log.silly('PuppetWebBridge', 'inject() eval(Wechaty) return code[%d] message[%s]',
-                                      retObj.code, retObj.message)
+          retObj.code, retObj.message)
       } else {  // HTTP Code 4XX & 5XX
         throw new Error('execute injectio error: ' + retObj.code + ', ' + retObj.message)
       }
@@ -244,7 +246,7 @@ export class Bridge extends EventEmitter {
       if (retObj && /^(2|3)/.test(retObj.code.toString())) {
         // HTTP Code 2XX & 3XX
         log.silly('PuppetWebBridge', 'inject() Wechaty.init() return code[%d] message[%s]',
-                                      retObj.code, retObj.message)
+          retObj.code, retObj.message)
       } else {  // HTTP Code 4XX & 5XX
         throw new Error('execute proxyWechaty(init) error: ' + retObj.code + ', ' + retObj.message)
       }
@@ -305,7 +307,7 @@ export class Bridge extends EventEmitter {
     }
   }
 
-  public async contactRemark(contactId: string, remark: string|null): Promise<boolean> {
+  public async contactRemark(contactId: string, remark: string | null): Promise<boolean> {
     try {
       return await this.proxyWechaty('contactRemark', contactId, remark)
     } catch (e) {
@@ -509,7 +511,7 @@ export class Bridge extends EventEmitter {
     try {
       return await retryPromise({ max: max, backoff: backoff }, async attempt => {
         log.silly('PuppetWebBridge', 'getContact() retryPromise: attampt %s/%s time for timeout %s',
-                                      attempt, max, timeout)
+          attempt, max, timeout)
         try {
           const r = await this.proxyWechaty('getContact', id)
           if (r) {
@@ -606,15 +608,15 @@ export class Bridge extends EventEmitter {
    * Proxy Call to Wechaty in Bridge
    */
   public async proxyWechaty(
-    wechatyFunc : string,
-    ...args     : any[],
+    wechatyFunc: string,
+    ...args: any[],
   ): Promise<any> {
     log.silly('PuppetWebBridge', 'proxyWechaty(%s%s)',
-                                  wechatyFunc,
-                                  args.length
-                                  ? ' , ' + args.join(', ')
-                                  : '',
-              )
+      wechatyFunc,
+      args.length
+        ? ' , ' + args.join(', ')
+        : '',
+    )
 
     try {
       const noWechaty = await this.page.evaluate(() => {
@@ -701,15 +703,15 @@ export class Bridge extends EventEmitter {
 
     const textSnip = text.substr(0, 50).replace(/\n/, '')
     log.verbose('PuppetWebBridge', 'testBlockedMessage(%s)',
-                                  textSnip)
+      textSnip)
 
     // see unit test for detail
     const tryXmlText = this.preHtmlToXml(text)
 
     interface BlockedMessage {
       error?: {
-        ret     : number,
-        message : string,
+        ret: number,
+        message: string,
       }
     }
 
@@ -726,8 +728,8 @@ export class Bridge extends EventEmitter {
         if (!obj.error) {
           return resolve(false)
         }
-        const ret     = +obj.error.ret
-        const message =  obj.error.message
+        const ret = +obj.error.ret
+        const message = obj.error.message
 
         log.warn('PuppetWebBridge', 'testBlockedMessage() error.ret=%s', ret)
 
@@ -764,8 +766,8 @@ export class Bridge extends EventEmitter {
         }, xpath)
         const properties = await nodeHandleList.getProperties()
 
-        const elementHandleList:  ElementHandle[] = []
-        const releasePromises:    Promise<void>[] = []
+        const elementHandleList: ElementHandle[] = []
+        const releasePromises: Promise<void>[] = []
 
         for (const property of properties.values()) {
           const element = property.asElement()
