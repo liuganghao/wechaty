@@ -35,7 +35,7 @@ import { parseString } from 'xml2js'
 const retryPromise = require('retry-promise').default
 
 import { log } from '../config'
-import { Profile, BrowserConfig } from '../profile'
+import { Profile } from '../profile'
 import Misc from '../misc'
 import {
   MediaData,
@@ -113,30 +113,31 @@ export class Bridge extends EventEmitter {
       opt.headless = this.options.profile.obj.browser.headless ? this.options.profile.obj.browser.headless : false
       if (this.options.profile.obj.browser.args)
         opt.args = this.options.profile.obj.browser.args
-      else {
-        opt.headless = true;
-      }
-      if (opt.headless && !opt.args)
-        opt.args = [
-          '--audio-output-channels=0',
-          '--disable-default-apps',
-          '--disable-extensions',
-          '--disable-translate',
-          '--disable-gpu',
-          '--disable-setuid-sandbox',
-          '--disable-sync',
-          '--hide-scrollbars',
-          '--mute-audio',
-          '--no-sandbox',
-        ]
-
-      const browser = await launch(opt)
-
-      const version = await browser.version()
-      log.verbose('PUppetWebBridge', 'initBrowser() version: %s', version)
-
-      return browser
     }
+    else {
+      opt.headless = true;
+    }
+    if (opt.headless && !opt.args)
+      opt.args = [
+        '--audio-output-channels=0',
+        '--disable-default-apps',
+        '--disable-extensions',
+        '--disable-translate',
+        '--disable-gpu',
+        '--disable-setuid-sandbox',
+        '--disable-sync',
+        '--hide-scrollbars',
+        '--mute-audio',
+        '--no-sandbox',
+      ]
+
+    const browser = await launch(opt)
+
+    const version = await browser.version()
+    log.verbose('PUppetWebBridge', 'initBrowser() version: %s', version)
+
+    return browser
+  }
 
   public async onDialog(dialog: Dialog) {
     log.warn('PuppetWebBridge', 'init() page.on(dialog) type:%s message:%s',
@@ -186,6 +187,8 @@ export class Bridge extends EventEmitter {
     // set this in time because the following callbacks
     // might be called before initPage() return.
     const page = this.page = await browser.newPage()
+    if (this.options.profile.obj.browser && this.options.profile.obj.browser.viewpoint)
+      await page.setViewport(this.options.profile.obj.browser.viewpoint)
 
     page.on('error', e => this.emit('error', e))
 

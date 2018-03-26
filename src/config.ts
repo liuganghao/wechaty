@@ -16,13 +16,13 @@
  *   limitations under the License.
  *
  */
-import * as fs    from 'fs'
-import * as os    from 'os'
-import * as path  from 'path'
+import * as fs from 'fs'
+import * as os from 'os'
+import * as path from 'path'
 
 import * as readPkgUp from 'read-pkg-up'
-import * as Raven     from 'raven'
-import Brolog         from 'brolog'
+import * as Raven from 'raven'
+import Brolog from 'brolog'
 
 import Puppet from './puppet'
 
@@ -35,20 +35,20 @@ export const VERSION = pkg.version
 Raven.disableConsoleAlerts()
 
 Raven
-.config(
-  process.env.NODE_ENV === 'production'
-    && 'https://f6770399ee65459a82af82650231b22c:d8d11b283deb441e807079b8bb2c45cd@sentry.io/179672',
-  {
-    release: VERSION,
-    tags: {
-      git_commit: '',
-      platform:   !!process.env['WECHATY_DOCKER']
-                  ? 'docker'
-                  : os.platform(),
+  .config(
+    process.env.NODE_ENV === 'production'
+    && 'https://fb97f98be44a4f2c8b5c030264d4a930:0dedf48251bd48869fd854d1ff7cb04c@sentry.io/619110',
+    {
+      release: VERSION,
+      tags: {
+        git_commit: '',
+        platform: !!process.env['WECHATY_DOCKER']
+          ? 'docker'
+          : os.platform(),
+      },
     },
-  },
 )
-.install()
+  .install()
 
 /*
 try {
@@ -86,17 +86,17 @@ if (/verbose|silly/i.test(log.level())) {
 }
 
 export type PuppetName = 'web'
-                        | 'android'
-                        | 'ios'
+  | 'android'
+  | 'ios'
 
 export interface DefaultSetting {
-  DEFAULT_HEAD     : number,
-  DEFAULT_PORT     : number,
-  DEFAULT_PUPPET   : PuppetName,
-  DEFAULT_APIHOST  : string,
-  DEFAULT_PROFILE  : string,
-  DEFAULT_TOKEN    : string,
-  DEFAULT_PROTOCOL : string,
+  DEFAULT_HEAD: number,
+  DEFAULT_PORT: number,
+  DEFAULT_PUPPET: PuppetName,
+  DEFAULT_APIHOST: string,
+  DEFAULT_PROFILE: string,
+  DEFAULT_TOKEN: string,
+  DEFAULT_PROTOCOL: string,
 }
 
 /* tslint:disable:variable-name */
@@ -106,13 +106,13 @@ export const DEFAULT_SETTING = pkg.wechaty as DefaultSetting
 export class Config {
   public default = DEFAULT_SETTING
 
-  public apihost = process.env['WECHATY_APIHOST']    || DEFAULT_SETTING.DEFAULT_APIHOST
-  public head    = ('WECHATY_HEAD' in process.env) ? (!!process.env['WECHATY_HEAD']) : (!!(DEFAULT_SETTING.DEFAULT_HEAD))
-  public puppet  = (process.env['WECHATY_PUPPET']    || DEFAULT_SETTING.DEFAULT_PUPPET) as PuppetName
+  public apihost = process.env['WECHATY_APIHOST'] || DEFAULT_SETTING.DEFAULT_APIHOST
+  public head = ('WECHATY_HEAD' in process.env) ? (!!process.env['WECHATY_HEAD']) : (!!(DEFAULT_SETTING.DEFAULT_HEAD))
+  public puppet = (process.env['WECHATY_PUPPET'] || DEFAULT_SETTING.DEFAULT_PUPPET) as PuppetName
 
-  public profile = process.env['WECHATY_PROFILE']    || null    // DO NOT set DEFAULT_PROFILE, because sometimes user do not want to save session
-  public token   = process.env['WECHATY_TOKEN']      || null    // DO NOT set DEFAULT, because sometimes user do not want to connect to io cloud service
-  public debug   = !!(process.env['WECHATY_DEBUG'])
+  public profile = process.env['WECHATY_PROFILE'] || null    // DO NOT set DEFAULT_PROFILE, because sometimes user do not want to save session
+  public token = process.env['WECHATY_TOKEN'] || null    // DO NOT set DEFAULT, because sometimes user do not want to connect to io cloud service
+  public debug = !!(process.env['WECHATY_DEBUG'])
 
   public httpPort = process.env['PORT'] || process.env['WECHATY_PORT'] || DEFAULT_SETTING.DEFAULT_PORT
   public docker = !!(process.env['WECHATY_DOCKER'])
@@ -152,26 +152,26 @@ export class Config {
   }
 
   public gitRevision(): string | null {
-    const dotGitPath  = path.join(__dirname, '..', '.git') // only for ts-node, not for dist
+    const dotGitPath = path.join(__dirname, '..', '.git') // only for ts-node, not for dist
     // const gitLogArgs  = ['log', '--oneline', '-1']
     // TODO: use git rev-parse HEAD ?
-    const gitArgs  = ['rev-parse', 'HEAD']
+    const gitArgs = ['rev-parse', 'HEAD']
 
     try {
       // Make sure this is a Wechaty repository
       fs.statSync(dotGitPath).isDirectory()
 
       const ss = require('child_process')
-                  .spawnSync('git', gitArgs, { cwd:  __dirname })
+        .spawnSync('git', gitArgs, { cwd: __dirname })
 
       if (ss.status !== 0) {
         throw new Error(ss.error)
       }
 
       const revision = ss.stdout
-                        .toString()
-                        .trim()
-                        .slice(0, 7)
+        .toString()
+        .trim()
+        .slice(0, 7)
       return revision
 
     } catch (e) { /* fall safe */
@@ -193,7 +193,7 @@ export class Config {
 }
 
 export interface Sayable {
-  say(content: string, replyTo?: any|any[]): Promise<boolean>
+  say(content: string, replyTo?: any | any[]): Promise<boolean>
 }
 
 export interface Sleepable {

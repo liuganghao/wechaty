@@ -79,10 +79,17 @@ class Bridge extends events_1.EventEmitter {
     initBrowser() {
         return __awaiter(this, void 0, void 0, function* () {
             config_1.log.verbose('PuppetWebBridge', 'initBrowser()');
-            const headless = this.options.head ? false : true;
-            let cli = {
-                headless,
-                args: [
+            let opt = {};
+            if (this.options.profile.obj.browser) {
+                opt.headless = this.options.profile.obj.browser.headless ? this.options.profile.obj.browser.headless : false;
+                if (this.options.profile.obj.browser.args)
+                    opt.args = this.options.profile.obj.browser.args;
+            }
+            else {
+                opt.headless = true;
+            }
+            if (opt.headless && !opt.args)
+                opt.args = [
                     '--audio-output-channels=0',
                     '--disable-default-apps',
                     '--disable-extensions',
@@ -93,9 +100,8 @@ class Bridge extends events_1.EventEmitter {
                     '--hide-scrollbars',
                     '--mute-audio',
                     '--no-sandbox',
-                ],
-            };
-            const browser = yield puppeteer_1.launch(cli);
+                ];
+            const browser = yield puppeteer_1.launch(opt);
             const version = yield browser.version();
             config_1.log.verbose('PUppetWebBridge', 'initBrowser() version: %s', version);
             return browser;

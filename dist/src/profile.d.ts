@@ -1,10 +1,17 @@
 export declare type ProfileSection = 'cookies';
 export interface ProfileSchema {
     cookies?: any[];
+    browser?: BrowserConfig;
+}
+export interface BrowserConfig {
+    headless: boolean;
+    args?: any[];
+    port: number;
+    viewpoint: any;
 }
 export declare class Profile {
     name: string | null;
-    private obj;
+    obj: ProfileSchema;
     private file;
     constructor(name?: string | null);
     toString(): string;

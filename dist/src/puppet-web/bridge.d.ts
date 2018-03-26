@@ -19,7 +19,7 @@
  */
 import { EventEmitter } from 'events';
 import { Browser, Cookie, Dialog, Page } from 'puppeteer';
-import Profile from '../profile';
+import { Profile } from '../profile';
 import { MediaData, MsgRawObj } from './schema';
 export interface InjectResult {
     code: number;

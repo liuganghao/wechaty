@@ -21,6 +21,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const path = require("path");
 const config_1 = require("./config");
+const os = require("os");
 class Profile {
     constructor(name = config_1.config.profile) {
         this.name = name;
@@ -54,6 +55,22 @@ class Profile {
         const text = fs.readFileSync(this.file).toString();
         try {
             this.obj = JSON.parse(text);
+            if (!this.obj.browser) {
+                if (os.platform() == 'darwin') {
+                    this.obj.browser = {
+                        port: 9225,
+                        viewpoint: { width: 1440, height: 826 },
+                        headless: true
+                    };
+                }
+                else {
+                    this.obj.browser = {
+                        port: 9225,
+                        viewpoint: { width: 1278, height: 954 },
+                        headless: true
+                    };
+                }
+            }
         }
         catch (e) {
             config_1.log.error('Profile', 'load() exception: %s', e);

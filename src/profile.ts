@@ -23,7 +23,8 @@ import {
   config,
   log,
 } from './config'
-import os from 'os'
+
+import * as os from 'os'
 
 export type ProfileSection = 'cookies'
 
@@ -64,11 +65,24 @@ export class Profile {
   public toString() {
     return `Profile<${this.name}>`
   }
-
+  private win32 = {
+    headless: false,
+    port: 9225,
+    viewpoint: { width: 1278, height: 954 }
+  }
+  private darwin = {
+    headless: false,
+    port: 9225,
+    viewpoint: { width: 1440, height: 826 }
+  }
   public load(): void {
     log.verbose('Profile', 'load() file: %s', this.file)
     this.obj = {}
-
+    if (os.platform() == 'darwin') {
+      this.obj.browser = this.darwin
+    } else {
+      this.obj.browser = this.win32
+    }
     if (!this.file) {
       log.verbose('Profile', 'load() no file, NOOP')
       return
@@ -86,15 +100,16 @@ export class Profile {
       if (!this.obj.browser) {
         if (os.platform() == 'darwin') {
           this.obj.browser = {
+            headless: false,
             port: 9225,
             viewpoint: { width: 1440, height: 826 }
-            , headless: true
+
           }
         } else {
           this.obj.browser = {
+            headless: false,
             port: 9225,
             viewpoint: { width: 1278, height: 954 }
-            , headless: true
           }
         }
       }
