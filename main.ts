@@ -41,8 +41,8 @@ import {
     log,
 } from './index'
 
-// log.level = 'verbose'
-// log.level = 'silly'
+log.level('verbose')
+
 
 /**
  *

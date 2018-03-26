@@ -44,8 +44,7 @@ const Tuling123 = require('tuling123-client');
  * when you are runing with Docker or NPM instead of Git Source.
  */
 const index_1 = require("./index");
-// log.level = 'verbose'
-// log.level = 'silly'
+index_1.log.level('verbose');
 /**
  *
  * Apply Your Own Tuling123 Developer API_KEY at:
