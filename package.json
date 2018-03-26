@@ -48,11 +48,6 @@
     "type": "git",
     "url": "git+https://github.com/chatie/wechaty.git"
   },
-  "bin": {
-    "wechaty-io-client": "dist/bin/io-client.js",
-    "wechaty-doctor": "dist/bin/doctor.js",
-    "wechaty-version": "dist/bin/version.js"
-  },
   "keywords": [
     "wechat",
     "微信",
