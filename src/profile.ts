@@ -35,7 +35,6 @@ export interface ProfileSchema {
 export interface BrowserConfig {
   headless: boolean,
   args?: any[],
-  port: number,
   viewpoint: any
 }
 export class Profile {
@@ -66,13 +65,13 @@ export class Profile {
     return `Profile<${this.name}>`
   }
   private win32 = {
+    args: [`--remote-debugging-port=9225`],
     headless: false,
-    port: 9225,
     viewpoint: { width: 1278, height: 954 }
   }
   private darwin = {
     headless: false,
-    port: 9225,
+    args: [`--remote-debugging-port=9225`],
     viewpoint: { width: 1440, height: 826 }
   }
   public load(): void {
@@ -99,18 +98,9 @@ export class Profile {
 
       if (!this.obj.browser) {
         if (os.platform() == 'darwin') {
-          this.obj.browser = {
-            headless: false,
-            port: 9225,
-            viewpoint: { width: 1440, height: 826 }
-
-          }
+          this.obj.browser = this.darwin
         } else {
-          this.obj.browser = {
-            headless: false,
-            port: 9225,
-            viewpoint: { width: 1278, height: 954 }
-          }
+          this.obj.browser = this.win32
         }
       }
     } catch (e) {
