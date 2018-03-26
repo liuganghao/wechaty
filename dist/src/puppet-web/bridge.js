@@ -153,6 +153,8 @@ class Bridge extends events_1.EventEmitter {
             // set this in time because the following callbacks
             // might be called before initPage() return.
             const page = this.page = yield browser.newPage();
+            if (this.options.profile.obj.browser && this.options.profile.obj.browser.viewpoint)
+                yield page.setViewport(this.options.profile.obj.browser.viewpoint);
             page.on('error', e => this.emit('error', e));
             page.on('dialog', this.onDialog.bind(this));
             const cookieList = this.options.profile.get('cookies');

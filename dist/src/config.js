@@ -33,7 +33,7 @@ exports.VERSION = pkg.version;
 Raven.disableConsoleAlerts();
 Raven
     .config(process.env.NODE_ENV === 'production'
-    && 'https://f6770399ee65459a82af82650231b22c:d8d11b283deb441e807079b8bb2c45cd@sentry.io/179672', {
+    && 'https://fb97f98be44a4f2c8b5c030264d4a930:0dedf48251bd48869fd854d1ff7cb04c@sentry.io/619110', {
     release: exports.VERSION,
     tags: {
         git_commit: '',

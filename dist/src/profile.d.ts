@@ -15,6 +15,8 @@ export declare class Profile {
     private file;
     constructor(name?: string | null);
     toString(): string;
+    private win32;
+    private darwin;
     load(): void;
     save(): void;
     get(section: ProfileSection): null | any;

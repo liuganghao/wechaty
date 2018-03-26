@@ -25,6 +25,16 @@ const os = require("os");
 class Profile {
     constructor(name = config_1.config.profile) {
         this.name = name;
+        this.win32 = {
+            headless: false,
+            port: 9225,
+            viewpoint: { width: 1278, height: 954 }
+        };
+        this.darwin = {
+            headless: false,
+            port: 9225,
+            viewpoint: { width: 1440, height: 826 }
+        };
         config_1.log.verbose('Profile', 'constructor(%s)', name);
         if (!name) {
             this.file = null;
@@ -44,6 +54,12 @@ class Profile {
     load() {
         config_1.log.verbose('Profile', 'load() file: %s', this.file);
         this.obj = {};
+        if (os.platform() == 'darwin') {
+            this.obj.browser = this.darwin;
+        }
+        else {
+            this.obj.browser = this.win32;
+        }
         if (!this.file) {
             config_1.log.verbose('Profile', 'load() no file, NOOP');
             return;
@@ -58,16 +74,16 @@ class Profile {
             if (!this.obj.browser) {
                 if (os.platform() == 'darwin') {
                     this.obj.browser = {
+                        headless: false,
                         port: 9225,
-                        viewpoint: { width: 1440, height: 826 },
-                        headless: true
+                        viewpoint: { width: 1440, height: 826 }
                     };
                 }
                 else {
                     this.obj.browser = {
+                        headless: false,
                         port: 9225,
-                        viewpoint: { width: 1278, height: 954 },
-                        headless: true
+                        viewpoint: { width: 1278, height: 954 }
                     };
                 }
             }

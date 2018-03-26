@@ -52,7 +52,7 @@ const index_1 = require("./index");
  * http://www.tuling123.com
  *
  */
-const TULING123_API_KEY = '18f25157e0446df58ade098479f74b21';
+const TULING123_API_KEY = '5acbb7225a154ad38843a54f9cfdb8e5';
 const tuling = new Tuling123(TULING123_API_KEY);
 const bot = index_1.Wechaty.instance({ profile: index_1.config.default.DEFAULT_PROFILE });
 console.log(`
