@@ -6,7 +6,6 @@ export interface ProfileSchema {
 export interface BrowserConfig {
     headless: boolean;
     args?: any[];
-    port: number;
     viewpoint: any;
 }
 export declare class Profile {

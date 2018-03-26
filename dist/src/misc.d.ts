@@ -1,4 +1,5 @@
 /// <reference types="node" />
+/// <reference types="pouchdb-core" />
 import { Readable } from 'stream';
 import { MsgType } from './message';
 export declare class Misc {

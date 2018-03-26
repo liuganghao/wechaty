@@ -26,13 +26,13 @@ class Profile {
     constructor(name = config_1.config.profile) {
         this.name = name;
         this.win32 = {
+            args: [`--remote-debugging-port=9225`],
             headless: false,
-            port: 9225,
             viewpoint: { width: 1278, height: 954 }
         };
         this.darwin = {
             headless: false,
-            port: 9225,
+            args: [`--remote-debugging-port=9225`],
             viewpoint: { width: 1440, height: 826 }
         };
         config_1.log.verbose('Profile', 'constructor(%s)', name);
@@ -73,18 +73,10 @@ class Profile {
             this.obj = JSON.parse(text);
             if (!this.obj.browser) {
                 if (os.platform() == 'darwin') {
-                    this.obj.browser = {
-                        headless: false,
-                        port: 9225,
-                        viewpoint: { width: 1440, height: 826 }
-                    };
+                    this.obj.browser = this.darwin;
                 }
                 else {
-                    this.obj.browser = {
-                        headless: false,
-                        port: 9225,
-                        viewpoint: { width: 1278, height: 954 }
-                    };
+                    this.obj.browser = this.win32;
                 }
             }
         }
