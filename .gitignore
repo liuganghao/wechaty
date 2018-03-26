@@ -51,7 +51,7 @@ demo.wechaty.json
 t/
 t.*
 .DS_Store
-/dist/
+*.js.map
 yarn.lock
 .yarn/
 .yarn-cache/
