@@ -5,7 +5,6 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "wechaty": {
-    "DEFAULT_HEAD": 1,
     "DEFAULT_PORT": 8080,
     "DEFAULT_PUPPET": "web",
     "DEFAULT_PROFILE": "demo"

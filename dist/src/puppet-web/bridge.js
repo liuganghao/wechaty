@@ -80,7 +80,7 @@ class Bridge extends events_1.EventEmitter {
         return __awaiter(this, void 0, void 0, function* () {
             config_1.log.verbose('PuppetWebBridge', 'initBrowser()');
             const headless = this.options.head ? false : true;
-            const browser = yield puppeteer_1.launch({
+            let cli = {
                 headless,
                 args: [
                     '--audio-output-channels=0',
@@ -94,7 +94,8 @@ class Bridge extends events_1.EventEmitter {
                     '--mute-audio',
                     '--no-sandbox',
                 ],
-            });
+            };
+            const browser = yield puppeteer_1.launch(cli);
             const version = yield browser.version();
             config_1.log.verbose('PUppetWebBridge', 'initBrowser() version: %s', version);
             return browser;

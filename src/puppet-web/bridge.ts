@@ -35,7 +35,7 @@ import { parseString } from 'xml2js'
 const retryPromise = require('retry-promise').default
 
 import { log } from '../config'
-import Profile from '../profile'
+import { Profile, BrowserConfig } from '../profile'
 import Misc from '../misc'
 import {
   MediaData,
@@ -50,6 +50,7 @@ export interface InjectResult {
 export interface BridgeOptions {
   head?: boolean,
   profile: Profile,
+
 }
 
 declare const WechatyBro
@@ -106,31 +107,36 @@ export class Bridge extends EventEmitter {
 
   public async initBrowser(): Promise<Browser> {
     log.verbose('PuppetWebBridge', 'initBrowser()')
-
-    const headless = this.options.head ? false : true
-
-    let cli = {
-      headless,
-      args: [
-        '--audio-output-channels=0',
-        '--disable-default-apps',
-        '--disable-extensions',
-        '--disable-translate',
-        '--disable-gpu',
-        '--disable-setuid-sandbox',
-        '--disable-sync',
-        '--hide-scrollbars',
-        '--mute-audio',
-        '--no-sandbox',
-      ],
+    let opt: any = {
     };
-    const browser = await launch(cli)
+    if (this.options.profile.obj.browser) {
+      opt.headless = this.options.profile.obj.browser.headless ? this.options.profile.obj.browser.headless : false
+      if (this.options.profile.obj.browser.args)
+        opt.args = this.options.profile.obj.browser.args
+      else {
+        opt.headless = true;
+      }
+      if (opt.headless && !opt.args)
+        opt.args = [
+          '--audio-output-channels=0',
+          '--disable-default-apps',
+          '--disable-extensions',
+          '--disable-translate',
+          '--disable-gpu',
+          '--disable-setuid-sandbox',
+          '--disable-sync',
+          '--hide-scrollbars',
+          '--mute-audio',
+          '--no-sandbox',
+        ]
 
-    const version = await browser.version()
-    log.verbose('PUppetWebBridge', 'initBrowser() version: %s', version)
+      const browser = await launch(opt)
 
-    return browser
-  }
+      const version = await browser.version()
+      log.verbose('PUppetWebBridge', 'initBrowser() version: %s', version)
+
+      return browser
+    }
 
   public async onDialog(dialog: Dialog) {
     log.warn('PuppetWebBridge', 'init() page.on(dialog) type:%s message:%s',

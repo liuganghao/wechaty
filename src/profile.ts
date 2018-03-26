@@ -16,23 +16,30 @@
  *   limitations under the License.
  *
  */
-import * as fs    from 'fs'
-import * as path  from 'path'
+import * as fs from 'fs'
+import * as path from 'path'
 
 import {
   config,
   log,
-}           from './config'
+} from './config'
+import os from 'os'
 
 export type ProfileSection = 'cookies'
 
 export interface ProfileSchema {
-  cookies?:   any[]
+  cookies?: any[],
+  browser?: BrowserConfig
 }
-
+export interface BrowserConfig {
+  headless: boolean,
+  args?: any[],
+  port: number,
+  viewpoint: any
+}
 export class Profile {
-  private obj  : ProfileSchema
-  private file : string | null
+  public obj: ProfileSchema
+  private file: string | null
 
   constructor(
     public name = config.profile,
@@ -45,11 +52,11 @@ export class Profile {
       this.file = path.isAbsolute(name)
         ? name
         : path.join(
-            process.cwd(),
-            name,
-          )
+          process.cwd(),
+          name,
+        )
       if (!/\.wechaty\.json$/.test(this.file)) {
-        this.file +=  '.wechaty.json'
+        this.file += '.wechaty.json'
       }
     }
   }
@@ -75,6 +82,22 @@ export class Profile {
     const text = fs.readFileSync(this.file).toString()
     try {
       this.obj = JSON.parse(text)
+
+      if (!this.obj.browser) {
+        if (os.platform() == 'darwin') {
+          this.obj.browser = {
+            port: 9225,
+            viewpoint: { width: 1440, height: 826 }
+            , headless: true
+          }
+        } else {
+          this.obj.browser = {
+            port: 9225,
+            viewpoint: { width: 1278, height: 954 }
+            , headless: true
+          }
+        }
+      }
     } catch (e) {
       log.error('Profile', 'load() exception: %s', e)
     }
