@@ -1,6 +1,6 @@
 {
-  "name": "windmill",
-  "version": "0.13.91",
+  "name": "wechaty",
+  "version": "0.13.91.0",
   "description": "Wechat for Bot(Personal Account)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -37,7 +37,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/liuganghao/windmill.git"
+    "url": "git+https://github.com/liuganghao/wechaty.git"
   },
   "keywords": [
     "wechat",
